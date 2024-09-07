@@ -1,0 +1,30 @@
+{% extends 'base.html' %} {% block title %} Exercise {% endblock %} {% block
+content %}
+<main class="container-md">
+  <h2>Exercise: {{ name }}</h2>
+  <!--<section>
+    <ul>
+      {% for video in videos %}
+      <li>
+        <a href="https://www.youtube.com/watch?v={{video.videoid}}">
+          {{ video.title}}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>-->
+  <section>
+    {% for video in videos %}
+    <iframe
+      width="320"
+      height="180"
+      src="https://www.youtube.com/embed/{{video.videoid}}"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+    {% endfor %}
+  </section>
+</main>
+{% endblock %}

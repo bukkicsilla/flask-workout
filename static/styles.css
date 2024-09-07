@@ -1,0 +1,15 @@
+body {
+  background-color: azure;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.msguser {
+  background-color: crimson;
+  color: snow;
+  width: 50%;
+  padding: 10px 20px;
+  border-radius: 8px;
+  margin: 0 auto;
+}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %} {% block title %} Exercise {% endblock %} {% block
+content %}
+<div class="container">
+  <h1>Welcome to the Workout Page</h1>
+  <div>
+    <form>
+      <input type="text" name="muscle" placeholder="muscle group" />
+      <button type="submit">Search</button>
+    </form>
+    <main>
+      {% for exercise in exercises %}
+      <div>
+        <a href="/videos?name={{exercise.name}}">{{ exercise.name }}</a>
+      </div>
+      {% for video in exercise.videos %}
+      <div>
+        <p>{{ video.title }}</p>
+      </div>
+      {% endfor %} {% endfor %}
+    </main>
+  </div>
+</div>
+{% endblock %}
