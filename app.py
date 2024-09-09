@@ -1,10 +1,17 @@
 from flask import Flask, render_template, jsonify, request, flash 
 from models import connect_db, Exercise
 from constants import BASE_URL_WORKOUT
+import app_json
 import requests
+import flask_cors
 
 app = Flask(__name__)
 
+app.add_url_rule('/api/fitness/exercises', view_func=app_json.api_exercise_by_muscle)
+app.add_url_rule('/api/fitness/allexercises', view_func=app_json.show_exercises)
+app.add_url_rule('/api/fitness/videos', view_func=app_json.show_videos)
+
+flask_cors.CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///workout_flask"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ECHO"] = False

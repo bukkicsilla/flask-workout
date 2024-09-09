@@ -1,13 +1,33 @@
 {% extends 'base.html' %} {% block title %} Exercise {% endblock %} {% block
 content %}
-<div class="container">
-  <h1>Welcome to the Workout Page</h1>
-  <div>
-    <form>
+<div class="container pencilsnow" id="home">
+  <div id="muscle-groups">
+    <p>Search among the following exercise groups:</p>
+    <ul>
+      <li>Abdominals</li>
+      <li>Abductors</li>
+      <li>Adductors</li>
+      <li>Biceps</li>
+      <li>Calves</li>
+      <li>Chest</li>
+      <li>Forearms</li>
+      <li>Glutes</li>
+      <li>Hamstrings</li>
+      <li>Lats</li>
+      <li>Lower Back</li>
+      <li>Middle Back</li>
+      <li>Neck</li>
+      <li>Quadriceps</li>
+      <li>Traps</li>
+      <li>Triceps</li>
+    </ul>
+  </div>
+  <div id="search-muscle-group">
+    <form class="form-workout">
       <input type="text" name="muscle" placeholder="muscle group" />
-      <button type="submit">Search</button>
+      <button type="submit" class="btn-search">Search</button>
     </form>
-    <main>
+    <section class="pencilsnow">
       {% for exercise in exercises %}
       <div>
         <a href="/videos?name={{exercise.name}}">{{ exercise.name }}</a>
@@ -17,7 +37,7 @@ content %}
         <p>{{ video.title }}</p>
       </div>
       {% endfor %} {% endfor %}
-    </main>
+    </section>
   </div>
 </div>
 {% endblock %}

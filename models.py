@@ -40,8 +40,8 @@ class Video(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     videoid = db.Column(db.String(20), nullable=False, default="onLTHQ1KE50")
     title = db.Column(db.Text, nullable=False, default="YouTube video")
-    rating = db.Column(db.Float, nullable=False, default=5.0)
-    exercise_name = db.Column(db.Text, db.ForeignKey('exercises.name'), nullable=False)
+    rating = db.Column(db.Float, db.CheckConstraint('rating >= 1.0 AND rating <= 10.0'), nullable=False, default=5.0)
+    exercise_name = db.Column(db.String(50), db.ForeignKey('exercises.name'), nullable=False)
     
     '''user_being_followed_id = db.Column(
         db.Integer,
@@ -71,8 +71,8 @@ class Video(db.Model):
         __tablename__ = "users"
 
         id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-        password = db.Column(db.Text, nullable=False)
-        email = db.Column(db.String(50), nullable=False, unique=True)
+        password = db.Column(db.String(20), nullable=False)
+        email = db.Column(db.String(30), nullable=False, unique=True)
         first_name = db.Column(db.String(30), nullable=False)
         last_name = db.Column(db.String(30), nullable=False)
 
@@ -94,4 +94,19 @@ class Video(db.Model):
 
         user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
         video_id = db.Column(db.Integer, db.ForeignKey("videos.id"), primary_key=True)
-        rating = db.Column(db.Integer, nullable=False, default=5)
+        rating = db.Column(db.Integer, db.CheckConstraint('rating >= 1 AND rating <= 10'), nullable=False, default=5)
+
+    class Playlist(db.Model):
+        __tablename__ = "playlists"
+
+        id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+        name = db.Column(db.String(50), nullable=False)
+        user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+        videos = db.relationship('Video', secondary='playlists_videos', backref='playlists') 
+
+    class PlaylistVideo(db.Model):
+        __tablename__ = "playlists_videos"
+
+        playlist_id = db.Column(db.Integer, db.ForeignKey("playlists.id"), primary_key=True)
+        video_id = db.Column(db.Integer, db.ForeignKey("videos.id"), primary_key=True)
