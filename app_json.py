@@ -2,13 +2,14 @@ from constants import BASE_URL_WORKOUT
 import requests
 from flask import jsonify, request
 
-def api_exercise_by_muscle():
-    muscle = request.args.get('muscle')
+def api_exercise_by_muscle(muscle):
+    #muscle = request.args.get('muscle')
     res_exercises = requests.get(f"{BASE_URL_WORKOUT}/exercises?muscle={muscle}").json()
     return jsonify(res_exercises['exercises'])
 
 
-def show_exercises():
+def show_all_exercises():
+    #res = requests.get(f"{BASE_URL_WORKOUT}/exercises/all").json()
     res = requests.get(f"{BASE_URL_WORKOUT}/exercises").json()
     return jsonify(res['exercises'])
 

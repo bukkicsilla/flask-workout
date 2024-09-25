@@ -7,8 +7,8 @@ import flask_cors
 
 app = Flask(__name__)
 
-app.add_url_rule('/api/fitness/exercises', view_func=app_json.api_exercise_by_muscle)
-app.add_url_rule('/api/fitness/allexercises', view_func=app_json.show_exercises)
+app.add_url_rule('/api/fitness/exercises/<muscle>', view_func=app_json.api_exercise_by_muscle)
+app.add_url_rule('/api/fitness/allexercises', view_func=app_json.show_all_exercises)
 app.add_url_rule('/api/fitness/videos', view_func=app_json.show_videos)
 
 flask_cors.CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -20,14 +20,19 @@ app.config["SECRET_KEY"] = "Capstone projects are challenging."
 
 connect_db(app)
 
+#@app.route('/api/fitness/exercises/<muscle>', methods=['GET'])
+#def api_exercise_by_muscle(muscle):
+#    res_exercises = requests.get(f"{BASE_URL_WORKOUT}/exercises?muscle={muscle}").json()
+#    return jsonify(res_exercises['exercises'])
+
 @app.route('/')
 def index():
     muscle = request.args.get('muscle')
     res_exercises = requests.get(f"{BASE_URL_WORKOUT}/exercises?muscle={muscle}").json()
-    name = 'National Parks'
-    print(name)
-    videos = Exercise.query.filter(Exercise.name == name).first().videos
-    print("videos", videos)
+    #name = 'National Parks'
+    #print(name)
+    #videos = Exercise.query.filter(Exercise.name == name).first().videos
+    #print("videos", videos)
     return render_template('index.html', exercises=res_exercises['exercises'])
 
 @app.route('/exercises')
