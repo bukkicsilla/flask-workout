@@ -4,7 +4,8 @@ from constants import BASE_URL_WORKOUT
 import app_json
 import requests
 import flask_cors
-from sqlalchemy import func
+import re
+
 
 app = Flask(__name__)
 
@@ -25,6 +26,17 @@ MUSCLES = ['abdominals', 'abductors', 'adductors', 'biceps', 'calves', 'chest', 
 #def api_exercise_by_muscle(muscle):
 #    res_exercises = requests.get(f"{BASE_URL_WORKOUT}/exercises?muscle={muscle}").json()
 #    return jsonify(res_exercises['exercises'])
+
+def transform_word(word):
+    # Case 1: Capitalize a single word (e.g., "abdominals" -> "Abdominals")
+    if '_' not in word:
+        return word.capitalize()
+    
+    # Case 2: Replace underscore with space and capitalize each word (e.g., "lower_back" -> "Lower Back")
+    else:
+        # Split by underscore, capitalize each part, and join them with a space
+        return ' '.join([w.capitalize() for w in word.split('_')])
+
 
 @app.route('/')
 def index():
@@ -117,4 +129,5 @@ def exercise_by_muscle():
     nums = list(range(1, len(exercises) + 1))
     headings = ["heading"+str(num) for num in nums]
     collapses = ["collapse"+str(num) for num in nums]
-    return render_template('exercise.html',  muscle=muscle, zipped=zip(exercises, headings, collapses))
+    transformed_muscle = transform_word(muscle)
+    return render_template('exercise.html',  muscle=transformed_muscle, zipped=zip(exercises, headings, collapses))
