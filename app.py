@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request, flash, redirect
+from flask import Flask, render_template, jsonify, request, flash, redirect, session
 from models import db, connect_db, Exercise, Video
 from constants import BASE_URL_WORKOUT
 import app_json
@@ -96,31 +96,33 @@ def get_my_videos():
                 muscle_groups[transformed_muscle] = []
             muscle_groups[transformed_muscle].append(exercise)
     
-    flash('You can scroll left and right.', 'msguser')
+    #flash('You can scroll left and right.', 'msguser')
     #print("Grouped exercises by muscle:", muscle_groups)
     return render_template('myvideos3.html', muscle_groups=muscle_groups)
 
 
 @app.route('/videos/add/<name>/<videoid>')
 def save_video(name, videoid):
-    print("name", name)
-    print("videoid", videoid)
-    videos = requests.get(f"{BASE_URL_WORKOUT}/videos/videoid?videoid={videoid}").json()
-    video = videos['videos'][0]
-    new_video = Video(videoid=video['videoid'], 
+    #print("name", name)
+    #print("videoid", videoid)
+    local_video = Video.query.filter(Video.videoid==videoid, Video.exercise_name == name).first()
+    if not local_video:
+        videos = requests.get(f"{BASE_URL_WORKOUT}/videos/videoid?videoid={videoid}").json()
+        video = videos['videos'][0]
+        new_video = Video(videoid=video['videoid'], 
                       title=video['title'], 
                       rating=video['rating'],
                       exercise_name=video['exercise_name'])
-    db.session.add(new_video)
-    db.session.commit()
-    print("videos", video)
-
-    return redirect('/my_videos')
+        db.session.add(new_video)
+        db.session.commit()
+        #print("videos", video)
+        return redirect('/my_videos')
+    flash('Video already added', 'msguser')
+    return redirect("/")
 
 @app.route('/videos/delete/<int:id>')
 def delete_video(id):
     video = Video.query.get_or_404(id)
-    print(video)
     db.session.delete(video)
     db.session.commit()
     return redirect('/my_videos')

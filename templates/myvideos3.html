@@ -16,6 +16,9 @@
     
     
     <div class="container-fluid mt-4">
+        {%if muscle_groups.keys() | length == 0 %}
+        <h3 class="text-center"> You have no videos yet. </h3>
+        {% endif %}
         {% for muscle, exercises in muscle_groups.items() %}
         <div>
           <h3>{{ muscle }}</h3>
@@ -38,7 +41,6 @@
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen
                       ></iframe>
-                      <h4> {{video.id}}</h4>
                       <a href="/videos/delete/{{video.id}}" class="delete-video">X</a>
                     </div>
                     {% endfor %}
