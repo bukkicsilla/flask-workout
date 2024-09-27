@@ -1,9 +1,10 @@
-from flask import Flask, render_template, jsonify, request, flash 
-from models import connect_db, Exercise
+from flask import Flask, render_template, jsonify, request, flash, redirect
+from models import db, connect_db, Exercise, Video
 from constants import BASE_URL_WORKOUT
 import app_json
 import requests
 import flask_cors
+from sqlalchemy import func
 
 app = Flask(__name__)
 
@@ -19,7 +20,7 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 10
 app.config["SECRET_KEY"] = "Capstone projects are challenging."
 
 connect_db(app)
-
+MUSCLES = ['abdominals', 'abductors', 'adductors', 'biceps', 'calves', 'chest', 'forearms', 'glutes', 'hamstrings', 'lats', 'lower_back', 'middle_back', 'neck', 'quadriceps', 'traps', 'triceps']
 #@app.route('/api/fitness/exercises/<muscle>', methods=['GET'])
 #def api_exercise_by_muscle(muscle):
 #    res_exercises = requests.get(f"{BASE_URL_WORKOUT}/exercises?muscle={muscle}").json()
@@ -37,7 +38,17 @@ def index():
 
 @app.route('/exercises')
 def get_exercises():
-    res = requests.get(f"{BASE_URL_WORKOUT}/exercises").json()
+    res = requests.get(f"{BASE_URL_WORKOUT}/exercises/all").json()
+    exercises = res['exercises']
+    '''for j in range(len(exercises)):
+            new_exercise = Exercise(name=exercises[j]['name'], 
+                                    exercise_type=exercises[j]['exercise_type'], 
+                                    muscle=exercises[j]['muscle'], 
+                                    equipment=exercises[j]['equipment'], 
+                                    difficulty=exercises[j]['difficulty'],
+                                    instructions=exercises[j]['instructions'])
+            db.session.add(new_exercise)
+            db.session.commit()'''
     return jsonify(res['exercises'])
 
 @app.route('/videos')
@@ -48,15 +59,54 @@ def get_videos():
     #return jsonify(res['videos'])
     return render_template('videos.html', name=name, videos=res_videos['videos']) 
 
-@app.route('/my_videos')
-def get_all():
-    exercises = Exercise.query.all()
-    flash('You can scroll left and right.', 'msguser')
-    return render_template('myvideos.html', exercises=exercises)
 
+'''@app.route('/my_videos')
+def get_my_videos():
+    exercises = Exercise.query.all()
+    my_exercises = []
+    for exercise in exercises:
+        if len(exercise.videos):
+            my_exercises.append(exercise)
+    flash('You can scroll left and right.', 'msguser')
+    print("exercises in my_videos", my_exercises)
+    return render_template('myvideos.html', exercises=my_exercises)'''
+
+@app.route('/my_videos')
+def get_my_videos():
+    exercises = Exercise.query.all()
+    muscle_groups = {}
+
+    # Group exercises by muscle
+    for exercise in exercises:
+        if len(exercise.videos):
+            if exercise.muscle not in muscle_groups:
+                muscle_groups[exercise.muscle] = []
+            muscle_groups[exercise.muscle].append(exercise)
+    
+    flash('You can scroll left and right.', 'msguser')
+    #print("Grouped exercises by muscle:", muscle_groups)
+    return render_template('myvideos3.html', muscle_groups=muscle_groups)
+
+
+@app.route('/videos/add/<name>/<videoid>')
+def save_video(name, videoid):
+    print("name", name)
+    print("videoid", videoid)
+    videos = requests.get(f"{BASE_URL_WORKOUT}/videos/videoid?videoid={videoid}").json()
+    video = videos['videos'][0]
+    new_video = Video(videoid=video['videoid'], 
+                      title=video['title'], 
+                      rating=video['rating'],
+                      exercise_name=video['exercise_name'])
+    db.session.add(new_video)
+    db.session.commit()
+    print("videos", video)
+
+    return redirect('/my_videos')
 
 @app.route('/exercise', methods=['GET'])
 def exercise_by_muscle():
+    """Display exercises in accordion by muscle group."""
     #muscle = request.form['muscle']
     muscle = request.args.get('muscle')
     if not muscle:

@@ -1,0 +1,55 @@
+{% extends 'base.html' %} {% block title %} Exercise {% endblock %} {% block
+    content %}
+    <div
+      class="alert alert-info alert-dismissible fade show w-50"
+      id="auto-dismiss-alert"
+      role="alert"
+    >
+      You can scroll left and right.
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    
+    
+    <div class="container-fluid mt-4">
+        {% for muscle, exercises in muscle_groups.items() %}
+        <div>
+          <h3>{{ muscle }}</h3>
+          <div class="mt-4">
+            <div class="row">
+              <div class="col">
+                <div
+                  class="d-flex overflow-auto flex-video-carousel"
+                  id="video-carousel"
+                >
+                  {% for exercise in exercises %}
+                    {% for video in exercise.videos %}
+                    <div class="me-2 video-wrapper">
+                      <iframe
+                        width="320"
+                        height="180"
+                        src="https://www.youtube.com/embed/{{ video.videoid }}"
+                        title="YouTube video player"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                      ></iframe>
+                      <a href="" class="delete-video">X</a>
+                    </div>
+                    {% endfor %}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      
+    </div>
+    {% endblock %}
+    

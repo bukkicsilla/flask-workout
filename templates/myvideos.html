@@ -14,12 +14,12 @@ content %}
   ></button>
 </div>
 
-{% for exercise in exercises %}
 
 <div class="container-fluid mt-4">
+  {% for exercise in exercises %}
   <div>
     <h3>{{ exercise.name }}</h3>
-    <p>{{ exercise.muscle }}</p>
+    <h3>{{ exercise.muscle }}</h3>
     <div class="mt-4">
       <div class="row">
         <div class="col">

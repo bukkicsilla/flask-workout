@@ -68,3 +68,45 @@ a {
   background-color: azure;
   color: #39a0ed;
 }
+.videos{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.youtube-frame{
+  /*border: 3px solid hotpink;*/
+  max-width: 500px;
+  padding:20px;
+}
+#save-video{
+  margin: 0 auto;
+}
+
+/*****************************************/
+/* delete anchor button on top right corner of video */
+.video-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* The 'X' anchor tag */
+.delete-video {
+  display: none;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: red;
+  color: white;
+  padding: 2px 6px;
+  font-size: 14px;
+  text-decoration: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Show 'X' when the iframe is hovered */
+.video-wrapper:hover .delete-video {
+  display: block;
+}
+
+/**************************************/
