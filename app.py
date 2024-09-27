@@ -91,9 +91,10 @@ def get_my_videos():
     # Group exercises by muscle
     for exercise in exercises:
         if len(exercise.videos):
-            if exercise.muscle not in muscle_groups:
-                muscle_groups[exercise.muscle] = []
-            muscle_groups[exercise.muscle].append(exercise)
+            transformed_muscle = transform_word(exercise.muscle)
+            if transformed_muscle not in muscle_groups:
+                muscle_groups[transformed_muscle] = []
+            muscle_groups[transformed_muscle].append(exercise)
     
     flash('You can scroll left and right.', 'msguser')
     #print("Grouped exercises by muscle:", muscle_groups)
@@ -114,6 +115,14 @@ def save_video(name, videoid):
     db.session.commit()
     print("videos", video)
 
+    return redirect('/my_videos')
+
+@app.route('/videos/delete/<int:id>')
+def delete_video(id):
+    video = Video.query.get_or_404(id)
+    print(video)
+    db.session.delete(video)
+    db.session.commit()
     return redirect('/my_videos')
 
 @app.route('/exercise', methods=['GET'])

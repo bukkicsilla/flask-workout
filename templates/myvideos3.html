@@ -38,7 +38,8 @@
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen
                       ></iframe>
-                      <a href="" class="delete-video">X</a>
+                      <h4> {{video.id}}</h4>
+                      <a href="/videos/delete/{{video.id}}" class="delete-video">X</a>
                     </div>
                     {% endfor %}
                   {% endfor %}
