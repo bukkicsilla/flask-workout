@@ -52,7 +52,7 @@
               <a class="nav-link" href="/my_videos">My Videos</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="">Profile</a>
+              <a class="nav-link" href="/profile">Profile</a>
             </li>
           </ul>
           <form class="d-flex" role="search" action="/exercise" method="GET">
@@ -93,8 +93,7 @@
       </div>
     </nav>
     {% for category, msg in get_flashed_messages(with_categories=true) %}
-      <h2 class="{{category}}">{{msg}}</h2>
-      {% endfor %}
-    {% block content %} {% endblock %}
+    <h2 class="{{category}}">{{msg}}</h2>
+    {% endfor %} {% block content %} {% endblock %}
   </body>
 </html>

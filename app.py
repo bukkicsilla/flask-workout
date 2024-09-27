@@ -37,6 +37,11 @@ def transform_word(word):
         # Split by underscore, capitalize each part, and join them with a space
         return ' '.join([w.capitalize() for w in word.split('_')])
 
+def not_authorized():
+    if "user_id" not in session:
+        flash("Please login first!", "msguser")
+        return True
+    return False
 
 @app.route('/')
 def index():
@@ -65,6 +70,8 @@ def get_exercises():
 
 @app.route('/videos')
 def get_videos():
+    #if not_authorized():
+    #    return redirect('/profile')
     name = request.args.get('name')
     res_videos = requests.get(f"{BASE_URL_WORKOUT}/videos?name={name}").json()
     #res = requests.get(f"{BASE_URL_WORKOUT}/videos").json()
@@ -85,6 +92,8 @@ def get_my_videos():
 
 @app.route('/my_videos')
 def get_my_videos():
+    #if not_authorized():
+    #    return redirect('/profile')
     exercises = Exercise.query.all()
     muscle_groups = {}
 
@@ -142,3 +151,10 @@ def exercise_by_muscle():
     collapses = ["collapse"+str(num) for num in nums]
     transformed_muscle = transform_word(muscle)
     return render_template('exercise.html',  muscle=transformed_muscle, zipped=zip(exercises, headings, collapses))
+
+
+#With User
+@app.route('/profile')
+def profile():
+    return render_template('profile.html') 
+

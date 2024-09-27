@@ -32,12 +32,14 @@ input {
   border: 1px solid #32322c;
 }
 .msguser {
-  background-color: crimson;
+  background-color: indigo;
+  opacity: 0.69;
   color: snow;
   width: 50%;
   padding: 10px 20px;
   border-radius: 8px;
   margin: 0 auto;
+  text-align: center;
 }
 .pencilsnow a,
 li,
@@ -68,17 +70,16 @@ a {
   background-color: azure;
   color: #39a0ed;
 }
-.videos{
+.videos {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
-.youtube-frame{
-  /*border: 3px solid hotpink;*/
+/*.youtube-frame {
   max-width: 500px;
-  padding:20px;
-}
-#save-video{
+  padding: 20px;
+}*/
+#save-video {
   margin: 0 auto;
 }
 
@@ -90,7 +91,8 @@ a {
 }
 
 /* The 'X' anchor tag */
-.delete-video {
+.delete-video,
+.add-video {
   display: none;
   position: absolute;
   top: 5px;
@@ -105,7 +107,8 @@ a {
 }
 
 /* Show 'X' when the iframe is hovered */
-.video-wrapper:hover .delete-video {
+.video-wrapper:hover .delete-video,
+.video-wrapper:hover .add-video {
   display: block;
 }
 
