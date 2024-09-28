@@ -9,7 +9,8 @@ ul {
   margin: 0;
   padding: 0;
 }
-#home {
+#home,
+#profile {
   background-color: #4c6085;
   width: 70%;
   padding: 30px;
@@ -17,6 +18,9 @@ ul {
   margin: 50px auto;
   display: flex;
   justify-content: space-around;
+}
+#profile {
+  margin-top: 120px;
 }
 #muscle-groups {
   width: 50%;
@@ -32,13 +36,16 @@ input {
   border: 1px solid #32322c;
 }
 .msguser {
-  background-color: indigo;
-  opacity: 0.69;
-  color: snow;
-  width: 50%;
+  background-color: #9370db;
+  color: #fffafa;
+  width: 30%;
   padding: 10px 20px;
   border-radius: 8px;
-  margin: 0 auto;
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  /*margin: 5px auto;*/
   text-align: center;
 }
 .pencilsnow a,
@@ -75,22 +82,18 @@ a {
   flex-direction: row;
   flex-wrap: wrap;
 }
-/*.youtube-frame {
-  max-width: 500px;
-  padding: 20px;
-}*/
 #save-video {
   margin: 0 auto;
 }
 
 /*****************************************/
-/* delete anchor button on top right corner of video */
+/* save and delete anchor button on top right corner of video */
 .video-wrapper {
   position: relative;
   display: inline-block;
 }
 
-/* The 'X' anchor tag */
+/* The save '+' and delete 'X' anchor tag */
 .delete-video,
 .add-video {
   display: none;
@@ -106,10 +109,25 @@ a {
   cursor: pointer;
 }
 
-/* Show 'X' when the iframe is hovered */
+/* Show '+' or 'X' when the iframe is hovered */
 .video-wrapper:hover .delete-video,
 .video-wrapper:hover .add-video {
   display: block;
 }
 
 /**************************************/
+
+.auth {
+  border: 3px solid snow;
+  border-radius: 8px;
+  text-align: center;
+  width: 50%;
+  margin: 50px 30px;
+  padding: 100px 20px;
+}
+.auth a {
+  color: #36f1cd;
+}
+.auth a:hover {
+  color: snow;
+}

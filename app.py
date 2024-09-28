@@ -70,8 +70,8 @@ def get_exercises():
 
 @app.route('/videos')
 def get_videos():
-    #if not_authorized():
-    #    return redirect('/profile')
+    if not_authorized():
+        return redirect('/profile')
     name = request.args.get('name')
     res_videos = requests.get(f"{BASE_URL_WORKOUT}/videos?name={name}").json()
     #res = requests.get(f"{BASE_URL_WORKOUT}/videos").json()
@@ -92,8 +92,8 @@ def get_my_videos():
 
 @app.route('/my_videos')
 def get_my_videos():
-    #if not_authorized():
-    #    return redirect('/profile')
+    if not_authorized():
+        return redirect('/profile')
     exercises = Exercise.query.all()
     muscle_groups = {}
 
@@ -112,8 +112,6 @@ def get_my_videos():
 
 @app.route('/videos/add/<name>/<videoid>')
 def save_video(name, videoid):
-    #print("name", name)
-    #print("videoid", videoid)
     local_video = Video.query.filter(Video.videoid==videoid, Video.exercise_name == name).first()
     if not local_video:
         videos = requests.get(f"{BASE_URL_WORKOUT}/videos/videoid?videoid={videoid}").json()
@@ -124,7 +122,6 @@ def save_video(name, videoid):
                       exercise_name=video['exercise_name'])
         db.session.add(new_video)
         db.session.commit()
-        #print("videos", video)
         return redirect('/my_videos')
     flash('Video already added', 'msguser')
     return redirect("/")
