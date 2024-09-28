@@ -35,7 +35,8 @@ input {
   border-radius: 8px;
   border: 1px solid #32322c;
 }
-.msguser {
+.msguser,
+.success {
   background-color: #9370db;
   color: #fffafa;
   width: 30%;
@@ -47,6 +48,9 @@ input {
   transform: translateX(-50%);
   /*margin: 5px auto;*/
   text-align: center;
+}
+.success {
+  background-color: green;
 }
 .pencilsnow a,
 li,

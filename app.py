@@ -1,5 +1,7 @@
 from flask import Flask, render_template, jsonify, request, flash, redirect, session
-from models import db, connect_db, Exercise, Video
+from models import db, connect_db, Exercise, Video, User
+from forms import RegisterForm, LoginForm, DeleteForm
+from sqlalchemy.exc import IntegrityError
 from constants import BASE_URL_WORKOUT
 import app_json
 import requests
@@ -53,6 +55,7 @@ def index():
     #print("videos", videos)
     return render_template('index.html', exercises=res_exercises['exercises'])
 
+
 @app.route('/exercises')
 def get_exercises():
     res = requests.get(f"{BASE_URL_WORKOUT}/exercises/all").json()
@@ -67,6 +70,7 @@ def get_exercises():
             db.session.add(new_exercise)
             db.session.commit()'''
     return jsonify(res['exercises'])
+
 
 @app.route('/videos')
 def get_videos():
@@ -89,6 +93,7 @@ def get_my_videos():
     flash('You can scroll left and right.', 'msguser')
     print("exercises in my_videos", my_exercises)
     return render_template('myvideos.html', exercises=my_exercises)'''
+
 
 @app.route('/my_videos')
 def get_my_videos():
@@ -126,12 +131,14 @@ def save_video(name, videoid):
     flash('Video already added', 'msguser')
     return redirect("/")
 
+
 @app.route('/videos/delete/<int:id>')
 def delete_video(id):
     video = Video.query.get_or_404(id)
     db.session.delete(video)
     db.session.commit()
     return redirect('/my_videos')
+
 
 @app.route('/exercise', methods=['GET'])
 def exercise_by_muscle():
@@ -154,4 +161,59 @@ def exercise_by_muscle():
 @app.route('/profile')
 def profile():
     return render_template('profile.html') 
+
+#authorization
+@app.route("/register", methods=['GET', 'POST'])
+def register_user():
+    """Register user"""
+    if "user_id" in session:
+        return redirect(f"/profile/{session['user_id']}")
+    
+    form = RegisterForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+        email = form.email.data
+        first_name = form.first_name.data
+        last_name = form.last_name.data
+        new_user = User.register(username, password, email, first_name, last_name)
+        print("new_user", new_user)
+        #db.session.add(new_user)
+        '''try:
+            db.session.commit()
+        except IntegrityError:
+            form.username.errors.append('Username taken.  Please pick another')
+            return render_template('register.html', form=form)'''
+        #db.session.commit()
+        session['user_id'] = new_user.id
+        flash('Welcome! Successfully Created Your Account!', "success")
+        return redirect('/my_videos')
+    return render_template('register.html', form=form)
+
+
+@app.route("/login", methods=['GET', 'POST'])
+def login_user():
+    """Login user"""
+    form = LoginForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+        user = User.authenticate(username, password)
+        if user:
+            flash(f"Welcome Back, {user.username}!", "primary")
+            session['username'] = user.username
+            #return redirect('/secret')
+            return redirect(f'/users/{user.username}')
+        else:
+            form.username.errors = ['Invalid username or']
+            form.password.errors = ['Invalid password']
+    return render_template('login.html', form=form)
+
+
+@app.route('/logout')
+def logout_user():
+    """Logout user"""
+    session.pop('user_id')
+    flash("Goodbye!", "success")
+    return redirect('/profile')
 
