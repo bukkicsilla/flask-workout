@@ -162,6 +162,27 @@ def exercise_by_muscle():
 def login_or_register():
     return render_template('auth.html') 
 
+@app.route('/profile/<int:user_id>')
+def show_profile(user_id):
+    if "user_id" not in session:
+        flash("Please login first!", "msguser")
+        return redirect('/auth')
+    user = User.query.get_or_404(user_id)
+    return render_template('profile.html', user=user)
+
+
+@app.route('/users/delete/<int:user_id>')
+def delete_user(user_id):
+    if "user_id" not in session:
+        flash("Please login first!", "msguser")
+        return redirect('/auth')
+    user = User.query.get_or_404(user_id)
+    print("user", user)
+    db.session.delete(user)
+    db.session.commit()
+    session.pop('user_id')
+    return redirect('/')
+
 #authorization
 @app.route("/register", methods=['GET', 'POST'])
 def register_user():
