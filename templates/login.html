@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block title %} Login {% endblock %} {% block
 content %}
-<div class="container" id="login">
-  <h1 class="display-1">Login</h1>
+<div class="my-container" id="login">
+  <h1 class="display-1 pencilsnow">Login</h1>
 
   <form method="POST">
     {{ form.hidden_tag() }} {% for field in form if field.widget.input_type !=

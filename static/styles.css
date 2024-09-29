@@ -9,7 +9,7 @@ ul {
   margin: 0;
   padding: 0;
 }
-.container {
+.my-container {
   background-color: #4c6085;
   width: 70%;
   padding: 30px;
@@ -21,6 +21,9 @@ ul {
 #profile,
 #login {
   margin-top: 120px;
+}
+#register {
+  margin-top: 100px;
 }
 #muscle-groups {
   width: 50%;
@@ -56,7 +59,9 @@ input {
 .pencilsnow a,
 li,
 p,
-.btn-search {
+.btn-search,
+.btn-login,
+.btn-register {
   color: snow;
   font-size: 1.2rem;
 }

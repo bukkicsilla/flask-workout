@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block title %} Register {% endblock %} {% block
 content %}
-<div class="container" id="register">
-  <h1 class="display-1">Sign Up</h1>
+<div class="my-container" id="register">
+  <h1 class="pencilsnow">Sign Up</h1>
 
   <form method="POST">
     {{ form.hidden_tag() }} {% for field in form if field.widget.input_type !=
@@ -14,7 +14,7 @@ content %}
     </h5>
     {% endfor %}
 
-    <button class="btn btn-success" type="submit">Register</button>
+    <button class="btn btn-register" type="submit">Register</button>
   </form>
 </div>
 {% endblock %}

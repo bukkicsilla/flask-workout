@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% block title %} Exercise {% endblock %} {% block
 content %}
-<div class="container" id="home">
+<div class="my-container" id="home">
   <div id="muscle-groups">
     <p>Search among the following exercise groups:</p>
     <ul>
@@ -40,8 +40,4 @@ content %}
     </section>
   </div>
 </div>
-{%if session['user_id'] %}
-<div>
-  <a href="/logout">Logout</a>
-</div>
-{% endif %} {% endblock %}
+{%if session['user_id'] %} {% endif %} {% endblock %}

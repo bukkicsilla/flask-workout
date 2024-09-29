@@ -51,9 +51,24 @@
             <li class="nav-item">
               <a class="nav-link" href="/my_videos">My Videos</a>
             </li>
+            {% if session['user_id'] %}
             <li class="nav-item">
               <a class="nav-link" href="/profile">Profile</a>
             </li>
+            <li class="nav-item">
+              <!--<form action="/logout" method="POST">
+              <button class="btn btn-info">Logout</button>
+            </form>-->
+              <a class="nav-link pr-3" href="/logout">Logout</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link pr-3" href="/login">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/register">Sign up</a>
+            </li>
+            {% endif %}
           </ul>
           <form class="d-flex" role="search" action="/exercise" method="GET">
             <select name="muscle" class="form-control me-2">

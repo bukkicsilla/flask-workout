@@ -75,7 +75,7 @@ def get_exercises():
 @app.route('/videos')
 def get_videos():
     if not_authorized():
-        return redirect('/profile')
+        return redirect('/auth')
     name = request.args.get('name')
     res_videos = requests.get(f"{BASE_URL_WORKOUT}/videos?name={name}").json()
     #res = requests.get(f"{BASE_URL_WORKOUT}/videos").json()
@@ -98,7 +98,7 @@ def get_my_videos():
 @app.route('/my_videos')
 def get_my_videos():
     if not_authorized():
-        return redirect('/profile')
+        return redirect('/auth')
     exercises = Exercise.query.all()
     muscle_groups = {}
 
@@ -158,9 +158,9 @@ def exercise_by_muscle():
 
 
 #With User
-@app.route('/profile')
-def profile():
-    return render_template('profile.html') 
+@app.route('/auth')
+def login_or_register():
+    return render_template('auth.html') 
 
 #authorization
 @app.route("/register", methods=['GET', 'POST'])
@@ -216,5 +216,5 @@ def logout_user():
     """Logout user"""
     session.pop('user_id')
     #flash("Goodbye!", "success")
-    return redirect('/profile')
+    return redirect('/')
 
