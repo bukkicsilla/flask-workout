@@ -99,6 +99,8 @@ def get_my_videos():
 def get_my_videos():
     if not_authorized():
         return redirect('/auth')
+    user = session['user_id']
+    user = User.query.get_or_404(user)
     exercises = Exercise.query.all()
     muscle_groups = {}
 
@@ -112,7 +114,7 @@ def get_my_videos():
     
     #flash('You can scroll left and right.', 'msguser')
     #print("Grouped exercises by muscle:", muscle_groups)
-    return render_template('myvideos3.html', muscle_groups=muscle_groups)
+    return render_template('myvideos3.html', muscle_groups=muscle_groups, user=user)
 
 
 @app.route('/videos/add/<name>/<videoid>')
@@ -140,6 +142,16 @@ def delete_video(id):
     return redirect('/my_videos')
 
 
+@app.route('/playlists')
+def get_playlists():
+    if not_authorized():
+        return redirect('/auth')
+    #user = User.query.get_or_404(userid)
+    user = session['user_id']
+    user = User.query.get_or_404(user)
+    return render_template('playlists.html', user=user)
+
+
 @app.route('/exercise', methods=['GET'])
 def exercise_by_muscle():
     """Display exercises in accordion by muscle group."""
@@ -157,7 +169,6 @@ def exercise_by_muscle():
     return render_template('exercise.html',  muscle=transformed_muscle, zipped=zip(exercises, headings, collapses))
 
 
-#With User
 @app.route('/auth')
 def login_or_register():
     return render_template('auth.html') 
