@@ -11,6 +11,7 @@ import re
 
 app = Flask(__name__)
 
+#API endpoints for React
 app.add_url_rule('/api/fitness/exercises/<muscle>', view_func=app_json.api_exercise_by_muscle)
 app.add_url_rule('/api/fitness/allexercises', view_func=app_json.show_all_exercises)
 app.add_url_rule('/api/fitness/videos', view_func=app_json.show_videos)
@@ -49,15 +50,12 @@ def not_authorized():
 def index():
     muscle = request.args.get('muscle')
     res_exercises = requests.get(f"{BASE_URL_WORKOUT}/exercises?muscle={muscle}").json()
-    #name = 'National Parks'
-    #print(name)
-    #videos = Exercise.query.filter(Exercise.name == name).first().videos
-    #print("videos", videos)
     return render_template('index.html', exercises=res_exercises['exercises'])
 
 
 @app.route('/exercises')
 def get_exercises():
+    '''Get the 156 exercises from the workout API and add them to the database. For only development purposes.'''
     res = requests.get(f"{BASE_URL_WORKOUT}/exercises/all").json()
     exercises = res['exercises']
     '''for j in range(len(exercises)):
@@ -74,6 +72,7 @@ def get_exercises():
 
 @app.route('/videos')
 def get_videos():
+    '''Get YoutTube videos with a specific exercise name from the workout API.'''
     if not_authorized():
         return redirect('/auth')
     name = request.args.get('name')
@@ -119,6 +118,7 @@ def get_my_videos():
 
 @app.route('/videos/add/<name>/<videoid>')
 def save_video(name, videoid):
+    #Save a video to the database without authentication.
     local_video = Video.query.filter(Video.videoid==videoid, Video.exercise_name == name).first()
     if not local_video:
         videos = requests.get(f"{BASE_URL_WORKOUT}/videos/videoid?videoid={videoid}").json()
@@ -133,13 +133,28 @@ def save_video(name, videoid):
     flash('Video already added', 'msguser')
     return redirect("/")
 
-
+'''@app.route('/videos/add/<name>/<videoid>')
+def save_video(name, videoid):
+    #Save a video to the database with authentication.
+    local_video = Video.query.filter(Video.videoid==videoid, Video.exercise_name == name).first()
+    if not local_video:
+        videos = requests.get(f"{BASE_URL_WORKOUT}/videos/videoid?videoid={videoid}").json()
+        video = videos['videos'][0]
+        new_video = Video(videoid=video['videoid'], 
+                      title=video['title'], 
+                      rating=video['rating'],
+                      exercise_name=video['exercise_name'])
+        db.session.add(new_video)
+        db.session.commit()
+        return redirect('/my_videos')
+    flash('Video already added', 'msguser')
+    return redirect("/")
 @app.route('/videos/delete/<int:id>')
 def delete_video(id):
     video = Video.query.get_or_404(id)
     db.session.delete(video)
     db.session.commit()
-    return redirect('/my_videos')
+    return redirect('/my_videos')'''
 
 
 @app.route('/playlists')
@@ -209,7 +224,6 @@ def register_user():
         first_name = form.first_name.data
         last_name = form.last_name.data
         new_user = User.register(username, password, email, first_name, last_name)
-        print("new_user", new_user)
         db.session.add(new_user)
         '''try:
             db.session.commit()
@@ -218,8 +232,9 @@ def register_user():
             return render_template('register.html', form=form)'''
         db.session.commit()
         session['user_id'] = new_user.id
+        session['username'] = new_user.username
         #flash('Welcome new user!', "success")
-        return redirect('/my_videos')
+        return redirect('/')
     return render_template('register.html', form=form)
 
 
@@ -234,9 +249,8 @@ def login_user():
         if user:
             #flash(f"Welcome Back, {user.username}!", "primary")
             session['user_id'] = user.id
-            #return redirect('/secret')
-            #return redirect(f'/users/{user.username}')
-            return redirect('/my_videos')
+            session['username'] = user.username
+            return redirect('/')
         #else:
             #form.username.errors = ['Invalid username or']
             #form.password.errors = ['Invalid password']
@@ -247,6 +261,7 @@ def login_user():
 def logout_user():
     """Logout user"""
     session.pop('user_id')
+    session.pop('username')
     #flash("Goodbye!", "success")
     return redirect('/')
 
