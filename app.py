@@ -188,12 +188,13 @@ def exercise_by_muscle():
 def login_or_register():
     return render_template('auth.html') 
 
-@app.route('/profile/<int:user_id>')
-def show_profile(user_id):
+@app.route('/profile/<username>')
+def show_profile(username):
     if "user_id" not in session:
         flash("Please login first!", "msguser")
         return redirect('/auth')
-    user = User.query.get_or_404(user_id)
+    #user = User.query.get_or_404(user_id)
+    user = User.query.filter(User.username == username).first()
     return render_template('profile.html', user=user)
 
 
