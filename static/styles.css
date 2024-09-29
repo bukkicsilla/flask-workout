@@ -51,6 +51,7 @@ input {
 }
 .success {
   background-color: green;
+  left: 75%;
 }
 .pencilsnow a,
 li,

@@ -178,15 +178,15 @@ def register_user():
         last_name = form.last_name.data
         new_user = User.register(username, password, email, first_name, last_name)
         print("new_user", new_user)
-        #db.session.add(new_user)
+        db.session.add(new_user)
         '''try:
             db.session.commit()
         except IntegrityError:
             form.username.errors.append('Username taken.  Please pick another')
             return render_template('register.html', form=form)'''
-        #db.session.commit()
+        db.session.commit()
         session['user_id'] = new_user.id
-        flash('Welcome! Successfully Created Your Account!', "success")
+        #flash('Welcome new user!', "success")
         return redirect('/my_videos')
     return render_template('register.html', form=form)
 
@@ -200,13 +200,14 @@ def login_user():
         password = form.password.data
         user = User.authenticate(username, password)
         if user:
-            flash(f"Welcome Back, {user.username}!", "primary")
-            session['username'] = user.username
+            #flash(f"Welcome Back, {user.username}!", "primary")
+            session['user_id'] = user.id
             #return redirect('/secret')
-            return redirect(f'/users/{user.username}')
-        else:
-            form.username.errors = ['Invalid username or']
-            form.password.errors = ['Invalid password']
+            #return redirect(f'/users/{user.username}')
+            return redirect('/my_videos')
+        #else:
+            #form.username.errors = ['Invalid username or']
+            #form.password.errors = ['Invalid password']
     return render_template('login.html', form=form)
 
 
@@ -214,6 +215,6 @@ def login_user():
 def logout_user():
     """Logout user"""
     session.pop('user_id')
-    flash("Goodbye!", "success")
+    #flash("Goodbye!", "success")
     return redirect('/profile')
 
