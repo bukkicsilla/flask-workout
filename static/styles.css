@@ -1,5 +1,6 @@
 body {
   background-color: azure;
+  font-family: "Roboto", sans-serif; /* Consistent, modern font */
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
@@ -78,10 +79,10 @@ p,
 a {
   text-decoration: none;
 }
-#navbar-workout {
+#navbar-workout,
+footer {
   background-color: #36f1cd;
 }
-
 #btn-instructions {
   border: 3px solid #32322c;
 }

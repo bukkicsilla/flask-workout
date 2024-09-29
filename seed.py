@@ -1,10 +1,24 @@
 from models import db, Exercise, Video
 from app import app
+import requests
+from constants import BASE_URL_WORKOUT
 
 db.drop_all()
 db.create_all()
 
-e1 = Exercise(name="Plank", exercise_type="yoga")
+'''res = requests.get(f"{BASE_URL_WORKOUT}/exercises/all").json()
+exercises = len(res['exercises'])
+for j in range(len(exercises)):
+    new_exercise = Exercise(name=exercises[j]['name'], 
+                            exercise_type=exercises[j]['exercise_type'], 
+                            muscle=exercises[j]['muscle'], 
+                            equipment=exercises[j]['equipment'], 
+                            difficulty=exercises[j]['difficulty'],
+                            instructions=exercises[j]['instructions'])
+db.session.add(new_exercise)
+db.session.commit()'''
+
+'''e1 = Exercise(name="Plank", exercise_type="yoga")
 db.session.add(e1)
 db.session.commit()
 v11 = Video(videoid="pvIjsG5Svck", title="Core Exercise: Plank", rating=6, exercise_name="Plank")
@@ -53,4 +67,4 @@ db.session.add(v35)
 db.session.add(v36)
 db.session.add(v37)
 db.session.add(v38)
-db.session.commit()
+db.session.commit()'''
