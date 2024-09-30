@@ -190,6 +190,19 @@ def delete_video(id):
     return redirect('/my_videos')
 
 
+@app.route('/auth/videos/delete/<int:id>')
+def auth_delete_video(id):
+    #video = Video.query.get_or_404(id)
+    #print("video", video)
+    user_video = UserVideo.query.filter(UserVideo.user_id==session['user_id'], UserVideo.video_id == id).first()
+    #print("user_video", user_video)
+    db.session.delete(user_video)
+    db.session.commit()
+    #db.session.delete(video)
+    #db.session.commit()
+    return redirect('/auth/my_videos')
+
+
 @app.route('/playlists')
 def get_playlists():
     if not_authorized():
