@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request, flash, redirect, session
-from models import db, connect_db, Exercise, Video, User
+from models import db, connect_db, Exercise, Video, User, UserVideo
 from forms import RegisterForm, LoginForm, DeleteForm
 from sqlalchemy.exc import IntegrityError
 from constants import BASE_URL_WORKOUT
@@ -98,8 +98,6 @@ def get_my_videos():
 def get_my_videos():
     if not_authorized():
         return redirect('/auth')
-    user = session['user_id']
-    user = User.query.get_or_404(user)
     exercises = Exercise.query.all()
     muscle_groups = {}
 
@@ -110,15 +108,39 @@ def get_my_videos():
             if transformed_muscle not in muscle_groups:
                 muscle_groups[transformed_muscle] = []
             muscle_groups[transformed_muscle].append(exercise)
+    #print("Grouped exercises by muscle:", muscle_groups)
+    return render_template('myvideos3.html', muscle_groups=muscle_groups)
+
+
+@app.route('/auth/my_videos')
+def auth_get_my_videos():
+    if not_authorized():
+        return redirect('/auth')
+    
+    uservideos = UserVideo.query.filter(UserVideo.user_id==session['user_id']).all()
+    uv_ids = [uservideo.video_id for uservideo in uservideos]
+    s1 = set(uv_ids)
+    exercises = Exercise.query.all()
+    muscle_groups = {}
+
+    # Group exercises by muscle
+    for exercise in exercises:
+        video_ids = [video.id for video in exercise.videos]
+        s2 = set(video_ids)
+        if len(exercise.videos) and (s1 & s2):
+            transformed_muscle = transform_word(exercise.muscle)
+            if transformed_muscle not in muscle_groups:
+                muscle_groups[transformed_muscle] = []
+            muscle_groups[transformed_muscle].append(exercise)
     
     #flash('You can scroll left and right.', 'msguser')
     #print("Grouped exercises by muscle:", muscle_groups)
-    return render_template('myvideos3.html', muscle_groups=muscle_groups, user=user)
+    return render_template('myvideos5.html', muscle_groups=muscle_groups, ids=uv_ids)
 
 
 @app.route('/videos/add/<name>/<videoid>')
 def save_video(name, videoid):
-    #Save a video to the database without authentication.
+    '''Save a video to the database without authentication.'''
     local_video = Video.query.filter(Video.videoid==videoid, Video.exercise_name == name).first()
     if not local_video:
         videos = requests.get(f"{BASE_URL_WORKOUT}/videos/videoid?videoid={videoid}").json()
@@ -133,9 +155,9 @@ def save_video(name, videoid):
     flash('Video already added', 'msguser')
     return redirect("/")
 
-'''@app.route('/videos/add/<name>/<videoid>')
-def save_video(name, videoid):
-    #Save a video to the database with authentication.
+@app.route('/auth/videos/add/<name>/<videoid>')
+def auth_save_video(name, videoid):
+    '''Save a video to the database with authentication.'''
     local_video = Video.query.filter(Video.videoid==videoid, Video.exercise_name == name).first()
     if not local_video:
         videos = requests.get(f"{BASE_URL_WORKOUT}/videos/videoid?videoid={videoid}").json()
@@ -146,15 +168,26 @@ def save_video(name, videoid):
                       exercise_name=video['exercise_name'])
         db.session.add(new_video)
         db.session.commit()
-        return redirect('/my_videos')
+        uv = UserVideo(user_id=session['user_id'], video_id=new_video.id)
+        db.session.add(uv)
+        db.session.commit()
+        return redirect('/auth/my_videos')
+    user_video = UserVideo.query.filter(UserVideo.user_id==session['user_id'], UserVideo.video_id == local_video.id).first()
+    if not user_video:
+        uv = UserVideo(user_id=session['user_id'], video_id=local_video.id)
+        db.session.add(uv)
+        db.session.commit()
+        return redirect('/auth/my_videos')
     flash('Video already added', 'msguser')
     return redirect("/")
+
+
 @app.route('/videos/delete/<int:id>')
 def delete_video(id):
     video = Video.query.get_or_404(id)
     db.session.delete(video)
     db.session.commit()
-    return redirect('/my_videos')'''
+    return redirect('/my_videos')
 
 
 @app.route('/playlists')

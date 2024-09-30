@@ -25,7 +25,9 @@ content %}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen
       ></iframe>
-      <a href="/videos/add/{{name}}/{{video.videoid}}" class="add-video">+</a>
+      <a href="auth/videos/add/{{name}}/{{video.videoid}}" class="add-video"
+        >+</a
+      >
       <!--<a href="/videos/add/{{name}}/{{video.videoid}}" id="save-video" class="btn btn-success text-light d-block">Save</a>-->
     </div>
     {% endfor %}
