@@ -192,14 +192,9 @@ def delete_video(id):
 
 @app.route('/auth/videos/delete/<int:id>')
 def auth_delete_video(id):
-    #video = Video.query.get_or_404(id)
-    #print("video", video)
     user_video = UserVideo.query.filter(UserVideo.user_id==session['user_id'], UserVideo.video_id == id).first()
-    #print("user_video", user_video)
     db.session.delete(user_video)
     db.session.commit()
-    #db.session.delete(video)
-    #db.session.commit()
     return redirect('/auth/my_videos')
 
 
@@ -229,6 +224,19 @@ def exercise_by_muscle():
     transformed_muscle = transform_word(muscle)
     return render_template('exercise.html',  muscle=transformed_muscle, zipped=zip(exercises, headings, collapses))
 
+@app.route('/rating/<int:video_id>', methods=['POST'])
+def rate_video(video_id):
+    rating = request.form['rating']
+    uv_to_update = UserVideo.query.filter(UserVideo.user_id==session['user_id'], UserVideo.video_id==video_id).first()
+    uv_to_update.rating = rating
+    db.session.commit()
+    uvs = UserVideo.query.filter(UserVideo.video_id==video_id).all()
+    ratings = [uv.rating for uv in uvs]
+    avr_rating = round(sum(ratings) / len(ratings), 1)
+    video = Video.query.get_or_404(video_id)
+    video.rating = avr_rating
+    db.session.commit()
+    return redirect('/auth/my_videos')
 
 @app.route('/auth')
 def login_or_register():
@@ -250,7 +258,6 @@ def delete_user(user_id):
         flash("Please login first!", "msguser")
         return redirect('/auth')
     user = User.query.get_or_404(user_id)
-    print("user", user)
     db.session.delete(user)
     db.session.commit()
     session.pop('user_id')

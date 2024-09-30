@@ -41,6 +41,21 @@ content %}
               <a href="/auth/videos/delete/{{video.id}}" class="delete-video"
                 >X</a
               >
+
+              <form action="/rating/{{video.id}}" method="POST">
+                <label for="{{video.id}}">Rating: {{video.rating}}</label>
+                <input
+                  type="number"
+                  name="rating"
+                  min="1"
+                  max="10"
+                  step="1"
+                  value="{{video.rating}}"
+                  id="{{video.id}}"
+                  class="rating"
+                />
+                <button id="btn-rating" type="submit">Rate</button>
+              </form>
             </div>
             {% endif %} {% endfor %} {% endfor %}
           </div>
