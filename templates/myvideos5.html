@@ -43,18 +43,29 @@ content %}
               >
 
               <form action="/rating/{{video.id}}" method="POST">
-                <label for="{{video.id}}">Rating: {{video.rating}}</label>
+                <label for="{{video.id}}"
+                  ><i
+                    style="color: gold; font-size: 1.5rem"
+                    class="fa fa-star"
+                  ></i>
+                  {{video.rating}}</label
+                >
                 <input
                   type="number"
                   name="rating"
                   min="1"
                   max="10"
                   step="1"
-                  value="{{video.rating}}"
                   id="{{video.id}}"
                   class="rating"
+                  required
                 />
-                <button id="btn-rating" type="submit">Rate</button>
+                <button id="btn-rating" class="btn btn-success" type="submit">
+                  <i
+                    style="color: azure; font-size: 1.5rem"
+                    class="fa fa-star-o"
+                  ></i>
+                </button>
               </form>
             </div>
             {% endif %} {% endfor %} {% endfor %}

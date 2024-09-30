@@ -47,6 +47,15 @@ input {
   border-radius: 8px;
   border: 1px solid #32322c;
 }
+.rating {
+  display: inline-block;
+  width: 50%;
+  height: 40px;
+  border: 3px solid gold;
+}
+#btn-rating {
+  border-radius: 50%;
+}
 .msguser,
 .success {
   background-color: #9370db;
