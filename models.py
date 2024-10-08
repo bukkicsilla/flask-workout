@@ -123,7 +123,7 @@ class Playlist(db.Model):
     __tablename__ = "playlists"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(50), nullable=False)
+    name = db.Column(db.String(50), nullable=False, unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     videos = db.relationship('Video', secondary='playlists_videos', backref='playlists') 

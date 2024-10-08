@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify, request, flash, redirect, session
 from models import db, connect_db, Exercise, Video, User, UserVideo
-from forms import RegisterForm, LoginForm, DeleteForm
+from forms import RegisterForm, LoginForm, PlaylistForm
 from sqlalchemy.exc import IntegrityError
 from constants import BASE_URL_WORKOUT
 import app_json
@@ -197,8 +197,18 @@ def auth_delete_video(id):
     db.session.commit()
     return redirect('/auth/my_videos')
 
+@app.route('/auth/playlists/add/<int:video_id>', methods=['GET', 'POST'])
+def add_to_playlist(video_id):
+    print("video_id", video_id)
+    form = PlaylistForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        print("name", name)
+        return redirect('/auth/playlists')
+    else:
+        return render_template('add_to_playlist.html', form=form)
 
-@app.route('/playlists')
+@app.route('/auth/playlists')
 def get_playlists():
     if not_authorized():
         return redirect('/auth')

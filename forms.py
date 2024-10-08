@@ -17,6 +17,10 @@ class LoginForm(FlaskForm):
     username = StringField("Username", validators=[InputRequired()])
     password = PasswordField("Password", validators=[InputRequired()])
 
+class PlaylistForm(FlaskForm):
+    """Form for adding a video to a playlist."""
+    name = StringField("Playlist Name", validators=[InputRequired()])
+
 
 class DeleteForm(FlaskForm):
     """Delete form -- this form is intentionally blank."""

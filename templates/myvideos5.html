@@ -41,7 +41,6 @@ content %}
               <a href="/auth/videos/delete/{{video.id}}" class="delete-video"
                 >X</a
               >
-
               <form action="/rating/{{video.id}}" method="POST">
                 <label for="{{video.id}}"
                   ><i
@@ -67,6 +66,18 @@ content %}
                   ></i>
                 </button>
               </form>
+              <a href="/auth/playlists/add/{{video.id}}" class="add-playlist"
+                >+</a
+              >
+              {#
+              <form
+                action="/auth/playlists/add/{{video.id}}"
+                class="add-playlist"
+                method="POST"
+              >
+                <button>+</button>
+              </form>
+              #}
             </div>
             {% endif %} {% endfor %} {% endfor %}
           </div>

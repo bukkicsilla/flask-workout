@@ -1,0 +1,24 @@
+{% extends 'base.html' %} {% block title %} Add to Playlist {% endblock %} {%
+block content %}
+<div class="container mt-5">
+  <h1 class="text-center">Add video to Playlist</h1>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <form method="POST">
+        <!--{{form.hidden_tag()}} {% for field in form if
+            field.widget.input_type != 'hidden' %}
+            <p>
+              {{field.label}} {{field(class_="form-control")}} {% for err in
+              field.errors %}
+              <small class="form-text text-danger"> {{err}} </small>
+              {% endfor %}
+            </p>
+            {% endfor %}-->
+        {% include "form_fields.html" %}
+        <button class="btn btn-info btn-lg">Submit</button>
+        <a class="btn btn-warning btn-lg" href="/auth/my_videos">Go Back</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
