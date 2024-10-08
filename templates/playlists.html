@@ -13,13 +13,10 @@ content %}
     aria-label="Close"
   ></button>
 </div>
-{#
 <div class="container-fluid mt-4">
-  {%if muscle_groups.keys() | length == 0 %}
-  <h3 class="text-center">You have no videos yet.</h3>
-  {% endif %} {% for muscle, exercises in muscle_groups.items() %}
+  {% for playlist in playlists %}
   <div>
-    <h3>{{ muscle }}</h3>
+    <h3>{{ playlist.name }}</h3>
     <div class="mt-4">
       <div class="row">
         <div class="col">
@@ -27,54 +24,24 @@ content %}
             class="d-flex overflow-auto flex-video-carousel"
             id="video-carousel"
           >
-            {% for exercise in exercises %} {% for video in exercise.videos %}
-            {%if video.id in ids %}
-            <div class="me-2 video-wrapper">
+            {% for video in playlist.videos %}
+            <div class="me-2">
               <iframe
                 width="320"
                 height="180"
-                src="https://www.youtube.com/embed/{{ video.videoid }}"
+                src="https://www.youtube.com/embed/{{video.videoid}}"
                 title="YouTube video player"
                 frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen
               ></iframe>
-              <a href="/auth/videos/delete/{{video.id}}" class="delete-video"
-                >X</a
-              >
-
-              <form action="/rating/{{video.id}}" method="POST">
-                <label for="{{video.id}}"
-                  ><i
-                    style="color: gold; font-size: 1.5rem"
-                    class="fa fa-star"
-                  ></i>
-                  {{video.rating}}</label
-                >
-                <input
-                  type="number"
-                  name="rating"
-                  min="1"
-                  max="10"
-                  step="1"
-                  id="{{video.id}}"
-                  class="rating"
-                  required
-                />
-                <button id="btn-rating" class="btn btn-success" type="submit">
-                  <i
-                    style="color: azure; font-size: 1.5rem"
-                    class="fa fa-star-o"
-                  ></i>
-                </button>
-              </form>
             </div>
-            {% endif %} {% endfor %} {% endfor %}
+            {% endfor %}
           </div>
         </div>
       </div>
     </div>
+    {% endfor %}
   </div>
-  {% endfor %}
+  {% endblock %}
 </div>
-#} {% endblock %}

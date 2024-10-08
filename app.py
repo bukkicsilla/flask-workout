@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request, flash, redirect, session
-from models import db, connect_db, Exercise, Video, User, UserVideo
+from models import db, connect_db, Exercise, Video, User, UserVideo, Playlist, PlaylistVideo
 from forms import RegisterForm, LoginForm, PlaylistForm
 from sqlalchemy.exc import IntegrityError
 from constants import BASE_URL_WORKOUT
@@ -199,11 +199,22 @@ def auth_delete_video(id):
 
 @app.route('/auth/playlists/add/<int:video_id>', methods=['GET', 'POST'])
 def add_to_playlist(video_id):
-    print("video_id", video_id)
     form = PlaylistForm()
     if form.validate_on_submit():
         name = form.name.data
-        print("name", name)
+        existing_playlist = Playlist.query.filter(Playlist.name==name, Playlist.user_id==session['user_id']).first()
+        if not existing_playlist:
+            playlist = Playlist(name=name, user_id=session['user_id'])  
+            db.session.add(playlist)
+            db.session.commit()
+            pl = Playlist.query.filter(Playlist.name==name, Playlist.user_id==session['user_id']).first()
+            pv = PlaylistVideo(playlist_id=pl.id, video_id=video_id)
+            db.session.add(pv)
+            db.session.commit()
+            return redirect('/auth/playlists')
+        pv = PlaylistVideo(playlist_id=existing_playlist.id, video_id=video_id)
+        db.session.add(pv)
+        db.session.commit()
         return redirect('/auth/playlists')
     else:
         return render_template('add_to_playlist.html', form=form)
@@ -215,7 +226,9 @@ def get_playlists():
     #user = User.query.get_or_404(userid)
     user = session['user_id']
     user = User.query.get_or_404(user)
-    return render_template('playlists.html', user=user)
+    playlists = Playlist.query.filter(Playlist.user_id==user.id).all()
+    #print("playlists", playlists)
+    return render_template('playlists.html',  playlists=playlists, user=user)
 
 
 @app.route('/exercise', methods=['GET'])
