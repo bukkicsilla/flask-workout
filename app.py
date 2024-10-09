@@ -213,6 +213,11 @@ def add_to_playlist(video_id):
             db.session.add(pv)
             db.session.commit()
             return redirect('/auth/playlists')
+        existing_pv = PlaylistVideo.query.filter(PlaylistVideo.playlist_id==existing_playlist.id, PlaylistVideo.video_id==video_id).first()
+        if existing_pv:
+            print("existing_pv", existing_pv)
+            flash('Video already added to the playlist', 'msguser')
+            return redirect('/auth/playlists')
         pv = PlaylistVideo(playlist_id=existing_playlist.id, video_id=video_id)
         db.session.add(pv)
         db.session.commit()
@@ -222,8 +227,6 @@ def add_to_playlist(video_id):
     
 @app.route('/auth/playlists/<playlist_name>/delete/<int:video_id>')
 def delete_from_playlist(playlist_name, video_id):
-    #user = User.query.get_or_404(session['user_id'])
-    #video = Video.query.get_or_404(video_id)
     playlist = Playlist.query.filter(Playlist.name==playlist_name, Playlist.user_id==session['user_id']).first()
     le = len(playlist.videos)
     pv = PlaylistVideo.query.filter(PlaylistVideo.playlist_id==playlist.id, PlaylistVideo.video_id==video_id).first()
@@ -234,17 +237,7 @@ def delete_from_playlist(playlist_name, video_id):
     db.session.delete(playlist)
     db.session.commit()
     return redirect('/auth/playlists')
-    '''if len(playlist.videos) > 1:
-        pv = PlaylistVideo.query.filter(PlaylistVideo.playlist_id==playlist.id, PlaylistVideo.video_id==video_id).first()
-        db.session.delete(pv)
-        db.session.commit()
-        return redirect('/auth/playlists')
-    pv = PlaylistVideo.query.filter(PlaylistVideo.playlist_id==playlist.id, PlaylistVideo.video_id==video_id).first()
-    db.session.delete(pv)
-    db.session.commit()
-    db.session.delete(playlist)
-    db.session.commit()
-    return redirect('/auth/playlists')'''
+
 
 @app.route('/auth/playlists')
 def get_playlists():

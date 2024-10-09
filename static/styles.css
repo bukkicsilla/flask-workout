@@ -1,3 +1,4 @@
+/*https://stackoverflow.com/questions/21993661/css-auto-hide-elements-after-5-seconds/21994053#21994053*/
 body {
   background-color: azure;
   font-family: "Roboto", sans-serif; /* Consistent, modern font */
@@ -61,14 +62,39 @@ input {
   background-color: #9370db;
   color: #fffafa;
   width: 30%;
-  padding: 10px 20px;
+  padding: 5px 10px;
   border-radius: 8px;
   position: absolute;
-  top: 100px;
+  bottom: 50px;
   left: 50%;
+  z-index: 1;
   transform: translateX(-50%);
   /*margin: 5px auto;*/
   text-align: center;
+  -webkit-animation: cssAnimation 3s forwards;
+  animation: cssAnimation 3s forwards;
+}
+@keyframes cssAnimation {
+  0% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes cssAnimation {
+  0% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 /*.success {
   background-color: green;
