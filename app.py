@@ -199,6 +199,7 @@ def auth_delete_video(id):
 
 @app.route('/auth/playlists/add/<int:video_id>', methods=['GET', 'POST'])
 def add_to_playlist(video_id):
+    #duplicate video warning ... !!!
     form = PlaylistForm()
     if form.validate_on_submit():
         name = form.name.data
@@ -218,17 +219,43 @@ def add_to_playlist(video_id):
         return redirect('/auth/playlists')
     else:
         return render_template('add_to_playlist.html', form=form)
+    
+@app.route('/auth/playlists/<playlist_name>/delete/<int:video_id>')
+def delete_from_playlist(playlist_name, video_id):
+    #user = User.query.get_or_404(session['user_id'])
+    #video = Video.query.get_or_404(video_id)
+    playlist = Playlist.query.filter(Playlist.name==playlist_name, Playlist.user_id==session['user_id']).first()
+    le = len(playlist.videos)
+    pv = PlaylistVideo.query.filter(PlaylistVideo.playlist_id==playlist.id, PlaylistVideo.video_id==video_id).first()
+    db.session.delete(pv)
+    db.session.commit()
+    if le > 1:
+        return redirect('/auth/playlists')
+    db.session.delete(playlist)
+    db.session.commit()
+    return redirect('/auth/playlists')
+    '''if len(playlist.videos) > 1:
+        pv = PlaylistVideo.query.filter(PlaylistVideo.playlist_id==playlist.id, PlaylistVideo.video_id==video_id).first()
+        db.session.delete(pv)
+        db.session.commit()
+        return redirect('/auth/playlists')
+    pv = PlaylistVideo.query.filter(PlaylistVideo.playlist_id==playlist.id, PlaylistVideo.video_id==video_id).first()
+    db.session.delete(pv)
+    db.session.commit()
+    db.session.delete(playlist)
+    db.session.commit()
+    return redirect('/auth/playlists')'''
 
 @app.route('/auth/playlists')
 def get_playlists():
     if not_authorized():
         return redirect('/auth')
     #user = User.query.get_or_404(userid)
-    user = session['user_id']
-    user = User.query.get_or_404(user)
+    user_id = session['user_id']
+    user = User.query.get_or_404(user_id)
     playlists = Playlist.query.filter(Playlist.user_id==user.id).all()
     #print("playlists", playlists)
-    return render_template('playlists.html',  playlists=playlists, user=user)
+    return render_template('playlists.html',  playlists=playlists)
 
 
 @app.route('/exercise', methods=['GET'])

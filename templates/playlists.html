@@ -25,7 +25,7 @@ content %}
             id="video-carousel"
           >
             {% for video in playlist.videos %}
-            <div class="me-2">
+            <div class="me-2 video-wrapper">
               <iframe
                 width="320"
                 height="180"
@@ -35,6 +35,11 @@ content %}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen
               ></iframe>
+              <a
+                href="/auth/playlists/{{playlist.name}}/delete/{{video.id}}"
+                class="delete-video"
+                >X</a
+              >
             </div>
             {% endfor %}
           </div>
