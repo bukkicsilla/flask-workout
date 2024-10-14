@@ -28,6 +28,39 @@ ul {
   justify-content: space-around;
   justify-content: space-evenly;
 }
+.profile-two-containers {
+  width: 50%;
+  padding: 10px;
+  border-radius: 8px;
+  margin: 150px auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end; /* Center content vertically */
+  background-color: #4c6085;
+}
+
+.profile-container-info {
+  background-color: #4c6085;
+  width: 80%;
+  padding: 20px;
+  margin: 100px 0 50px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column; /* Stack content vertically */
+  align-items: center; /* Center content horizontally */
+  justify-content: center; /* Center content vertically */
+}
+.profile-container-edit-delete {
+  background-color: #4c6085;
+  width: 50%;
+  padding: 20px;
+  margin: 100px 0 50px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column; /* Stack content vertically */
+  align-items: center; /* Center content horizontally */
+  justify-content: space-evenly; /* Center content vertically */
+}
 #profile,
 #login {
   margin-top: 120px;
@@ -139,6 +172,7 @@ footer {
   background-color: #39a0ed;
   padding: 10px 20px;
   border-radius: 12px;
+  margin: 10px 0;
 }
 .btn-search:hover,
 .btn-login:hover,
