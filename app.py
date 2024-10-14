@@ -306,6 +306,22 @@ def delete_user(user_id):
     session.pop('user_id')
     return redirect('/')
 
+@app.route('/users/update/<int:user_id>', methods=['GET', 'POST'])
+def update_user(user_id):
+    if "user_id" not in session:
+        flash("Please login first!", "msguser")
+        return redirect('/auth')
+    user = User.query.get_or_404(user_id)
+    form = RegisterForm(obj=user)
+    if form.validate_on_submit():
+        user.username = form.username.data
+        user.email = form.email.data
+        user.first_name = form.first_name.data
+        user.last_name = form.last_name.data
+        db.session.commit()
+        return redirect(f'/profile/{user.username}')
+    return render_template('update_user.html', form=form, user=user)
+
 #authorization
 @app.route("/register", methods=['GET', 'POST'])
 def register_user():
