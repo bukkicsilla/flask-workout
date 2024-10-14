@@ -322,15 +322,17 @@ def register_user():
         last_name = form.last_name.data
         new_user = User.register(username, password, email, first_name, last_name)
         db.session.add(new_user)
-        '''try:
+        try:
             db.session.commit()
         except IntegrityError:
-            form.username.errors.append('Username taken.  Please pick another')
-            return render_template('register.html', form=form)'''
+            #form.username.errors.append('Username taken. Sign up again.')
+            #form.email.errors.append('Or Email taken. Sign up again.')
+            flash('Username or Email taken. Sign up again.', 'msgerror')
+            return render_template('register.html', form=form)
         db.session.commit()
         session['user_id'] = new_user.id
         session['username'] = new_user.username
-        #flash('Welcome new user!', "success")
+        #flash(f"Welcome {new_user.username}", "success")
         return redirect('/')
     return render_template('register.html', form=form)
 
@@ -344,7 +346,7 @@ def login_user():
         password = form.password.data
         user = User.authenticate(username, password)
         if user:
-            #flash(f"Welcome Back, {user.username}!", "primary")
+            flash(f"Welcome Back, {user.username}!", "success")
             session['user_id'] = user.id
             session['username'] = user.username
             return redirect('/')
