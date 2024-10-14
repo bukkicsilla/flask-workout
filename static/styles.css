@@ -58,7 +58,8 @@ input {
   border-radius: 50%;
 }
 .msguser,
-.success {
+.success,
+.msgerror {
   background-color: #9370db;
   color: #fffafa;
   width: 30%;
@@ -73,6 +74,12 @@ input {
   text-align: center;
   -webkit-animation: cssAnimation 3s forwards;
   animation: cssAnimation 3s forwards;
+}
+.msgerror {
+  background-color: rgb(201, 47, 47);
+  color: snow;
+  top: 70px;
+  bottom: auto;
 }
 @keyframes cssAnimation {
   0% {

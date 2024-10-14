@@ -348,9 +348,11 @@ def login_user():
             session['user_id'] = user.id
             session['username'] = user.username
             return redirect('/')
-        #else:
+        else:
             #form.username.errors = ['Invalid username or']
             #form.password.errors = ['Invalid password']
+            flash('Invalid username or password', 'msgerror')
+            return redirect('/register')
     return render_template('login.html', form=form)
 
 
