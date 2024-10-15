@@ -17,11 +17,12 @@ app.add_url_rule('/api/fitness/allexercises', view_func=app_json.show_all_exerci
 app.add_url_rule('/api/fitness/videos', view_func=app_json.show_videos)
 
 flask_cors.CORS(app, resources={r"/api/*": {"origins": "*"}})
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///workout_flask"
+#app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///workout_flask"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres.jljzqisclorjmtmwcnog:FlaskW0rk0ut42.@aws-0-us-west-1.pooler.supabase.com:6543/postgres"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ECHO"] = False
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 10
-app.config["SECRET_KEY"] = "Capstone projects are challenging."
+app.config["SECRET_KEY"] = "Capstone workout"
 
 connect_db(app)
 MUSCLES = ['abdominals', 'abductors', 'adductors', 'biceps', 'calves', 'chest', 'forearms', 'glutes', 'hamstrings', 'lats', 'lower_back', 'middle_back', 'neck', 'quadriceps', 'traps', 'triceps']
