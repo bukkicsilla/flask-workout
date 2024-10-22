@@ -182,6 +182,18 @@ footer {
   background-color: azure;
   color: #39a0ed;
 }
+.btn-playlist,
+.btn-back {
+  border: 2px solid #36f1cd;
+  padding: 10px 20px;
+  border-radius: 12px;
+  margin: 10px 0;
+}
+.btn-playlist:hover,
+.btn-back:hover {
+  background-color: #36f1cd;
+  color: azure;
+}
 .videos {
   display: flex;
   flex-direction: row;
