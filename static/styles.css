@@ -341,3 +341,109 @@ footer {
 /* additional credit: https://github.com/devtonic-net/flask-loading-app-message-and-spinner */
 
 /*responsive desing */
+@media screen and (max-width: 480px) {
+  #auto-dismiss-alert {
+    width: 100%;
+  }
+  body {
+    font-size: 14px;
+  }
+
+  .two-containers {
+    height: auto;
+  }
+
+  .my-container {
+    width: 90%;
+    flex-direction: column;
+    padding: 20px;
+    margin: 20px auto;
+  }
+
+  .profile-two-containers,
+  .profile-container-info,
+  .profile-container-edit-delete {
+    width: 90%;
+    margin: 20px auto;
+    padding: 10px;
+  }
+
+  #profile,
+  #login,
+  #register {
+    margin-top: 60px;
+  }
+
+  #muscle-groups,
+  #search-muscle-group {
+    width: 100%;
+  }
+
+  input {
+    width: 100%;
+    padding: 8px;
+  }
+
+  .msguser,
+  .success,
+  .msgerror {
+    width: 80%;
+    padding: 5px;
+    font-size: 1rem;
+  }
+
+  .pencilsnow a,
+  li,
+  p,
+  .btn-search,
+  .btn-login,
+  .btn-register,
+  .btn-edit,
+  .btn-delete {
+    font-size: 1rem;
+  }
+
+  .auth {
+    width: 90%;
+    padding: 50px 10px;
+    margin: 20px auto;
+  }
+
+  #navbar-workout,
+  footer {
+    padding: 10px;
+  }
+
+  .form-workout {
+    margin-bottom: 20px;
+  }
+
+  .btn-search,
+  .btn-login,
+  .btn-register,
+  .btn-edit,
+  .btn-delete,
+  .btn-playlist,
+  .btn-back {
+    padding: 8px 15px;
+    font-size: 1rem;
+    margin: 8px 0;
+  }
+
+  .videos {
+    flex-direction: column;
+  }
+
+  .centered {
+    text-align: center;
+  }
+
+  #loading-spinner {
+    padding-top: 50px;
+    height: 100vh;
+  }
+
+  #loading-spinner h1 {
+    font-size: 1.5rem;
+  }
+}
