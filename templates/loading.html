@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <title>Loading page</title>
+  </head>
+
+  <body>
+    <div id="loading-spinner">
+      <h1 class="centered">Loading...</h1>
+      <div class="centered">
+        <div class="lds-facebook">
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    window.location.href = "{{ url_for('auth_get_my_videos') }}";
+  </script>
+</html>

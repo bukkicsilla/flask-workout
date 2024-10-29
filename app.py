@@ -112,8 +112,15 @@ def get_my_videos():
     #print("Grouped exercises by muscle:", muscle_groups)
     return render_template('myvideos3.html', muscle_groups=muscle_groups)
 
+#change this to /auth/my_videos
+@app.route("/auth/my_videos", methods=["GET"])
+def loading():
+    if not_authorized():
+        return redirect('/auth')
+    return render_template("loading.html")
 
-@app.route('/auth/my_videos')
+#change this to /auth/my_videos_done 
+@app.route('/auth/my_videos_loaded')
 def auth_get_my_videos():
     if not_authorized():
         return redirect('/auth')
