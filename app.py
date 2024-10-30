@@ -42,6 +42,7 @@ def transform_word(word):
         return ' '.join([w.capitalize() for w in word.split('_')])
 
 def not_authorized():
+    '''User is not authorized to view the page.'''
     if "user_id" not in session:
         flash("Please login first!", "msguser")
         return True
@@ -49,6 +50,7 @@ def not_authorized():
 
 @app.route('/')
 def index():
+    '''User can search exercises by muscle group.'''
     muscle = request.args.get('muscle')
     res_exercises = requests.get(f"{BASE_URL_WORKOUT}/exercises?muscle={muscle}").json()
     return render_template('index.html', exercises=res_exercises['exercises'])
@@ -95,7 +97,7 @@ def get_my_videos():
     return render_template('myvideos.html', exercises=my_exercises)'''
 
 
-@app.route('/my_videos')
+'''@app.route('/my_videos')
 def get_my_videos():
     if not_authorized():
         return redirect('/auth')
@@ -110,11 +112,12 @@ def get_my_videos():
                 muscle_groups[transformed_muscle] = []
             muscle_groups[transformed_muscle].append(exercise)
     #print("Grouped exercises by muscle:", muscle_groups)
-    return render_template('myvideos3.html', muscle_groups=muscle_groups)
+    return render_template('myvideos3.html', muscle_groups=muscle_groups)'''
 
 #change this to /auth/my_videos
 @app.route("/auth/my_videos", methods=["GET"])
 def loading():
+    '''Show looading message while the videos are being loaded.'''
     if not_authorized():
         return redirect('/auth')
     return render_template("loading.html")
@@ -122,6 +125,7 @@ def loading():
 #change this to /auth/my_videos_done 
 @app.route('/auth/my_videos_loaded')
 def auth_get_my_videos():
+    '''Show added videos grouped by muscle groups.'''
     if not_authorized():
         return redirect('/auth')
     
@@ -192,6 +196,7 @@ def auth_save_video(name, videoid):
 
 @app.route('/videos/delete/<int:id>')
 def delete_video(id):
+    '''Delete a video to the database without authentication.'''
     video = Video.query.get_or_404(id)
     db.session.delete(video)
     db.session.commit()
@@ -200,6 +205,7 @@ def delete_video(id):
 
 @app.route('/auth/videos/delete/<int:id>')
 def auth_delete_video(id):
+    '''Delete a video to the database with authentication.'''
     user_video = UserVideo.query.filter(UserVideo.user_id==session['user_id'], UserVideo.video_id == id).first()
     db.session.delete(user_video)
     db.session.commit()
@@ -207,6 +213,7 @@ def auth_delete_video(id):
 
 @app.route('/auth/playlists/add/<int:video_id>', methods=['GET', 'POST'])
 def add_to_playlist(video_id):
+    '''Add a video to a playlist.'''
     #duplicate video warning ... !!!
     form = PlaylistForm()
     if form.validate_on_submit():
@@ -235,6 +242,7 @@ def add_to_playlist(video_id):
     
 @app.route('/auth/playlists/<playlist_name>/delete/<int:video_id>')
 def delete_from_playlist(playlist_name, video_id):
+    '''Delete a video from a playlist.'''
     playlist = Playlist.query.filter(Playlist.name==playlist_name, Playlist.user_id==session['user_id']).first()
     le = len(playlist.videos)
     pv = PlaylistVideo.query.filter(PlaylistVideo.playlist_id==playlist.id, PlaylistVideo.video_id==video_id).first()
@@ -249,6 +257,7 @@ def delete_from_playlist(playlist_name, video_id):
 
 @app.route('/auth/playlists')
 def get_playlists():
+    '''Show playlists of the user.'''
     if not_authorized():
         return redirect('/auth')
     #user = User.query.get_or_404(userid)
@@ -277,6 +286,7 @@ def exercise_by_muscle():
 
 @app.route('/rating/<int:video_id>', methods=['POST'])
 def rate_video(video_id):
+    '''Rate a video.'''
     rating = request.form['rating']
     uv_to_update = UserVideo.query.filter(UserVideo.user_id==session['user_id'], UserVideo.video_id==video_id).first()
     uv_to_update.rating = rating
@@ -291,10 +301,12 @@ def rate_video(video_id):
 
 @app.route('/auth')
 def login_or_register():
+    '''Tell user to sign in or register.'''
     return render_template('auth.html') 
 
 @app.route('/profile/<username>')
 def show_profile(username):
+    '''Show user profile.'''
     if "user_id" not in session:
         flash("Please login first!", "msguser")
         return redirect('/auth')
@@ -305,6 +317,7 @@ def show_profile(username):
 
 @app.route('/users/delete/<int:user_id>')
 def delete_user(user_id):
+    '''Delete a user.'''
     if "user_id" not in session:
         flash("Please login first!", "msguser")
         return redirect('/auth')
@@ -316,6 +329,7 @@ def delete_user(user_id):
 
 @app.route('/users/update/<int:user_id>', methods=['GET', 'POST'])
 def update_user(user_id):
+    '''Update user information.'''
     if "user_id" not in session:
         flash("Please login first!", "msguser")
         return redirect('/auth')
