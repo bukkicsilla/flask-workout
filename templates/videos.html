@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block title %} Exercise {% endblock %} {% block
 content %}
 <main class="container-md">
-  <h2>Exercise: {{ name }}</h2>
+  <h2 class="text-center mt-4">Exercise: {{ name }}</h2>
   <!--<section>
     <ul>
       {% for video in videos %}
@@ -15,7 +15,7 @@ content %}
   </section>-->
   <section class="videos">
     {% for video in videos %}
-    <div class="video-wrapper m-5">
+    <div class="video-wrapper">
       <iframe
         width="320"
         height="180"

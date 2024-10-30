@@ -208,6 +208,7 @@ footer {
 .video-wrapper {
   position: relative;
   display: inline-block;
+  margin: 50px;
 }
 
 /* The save '+' and delete 'X' anchor tag */
@@ -433,6 +434,10 @@ footer {
   .videos {
     flex-direction: column;
   }
+  .video-wrapper {
+    margin: 20px auto;
+    width: 320px;
+  }
 
   .centered {
     text-align: center;
@@ -445,5 +450,9 @@ footer {
 
   #loading-spinner h1 {
     font-size: 1.5rem;
+  }
+  .auth {
+    display: flex;
+    flex-direction: column;
   }
 }
