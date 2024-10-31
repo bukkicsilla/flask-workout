@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify, request, flash, redirect, session, url_for
 from models import db, connect_db, Exercise, Video, User, UserVideo, Playlist, PlaylistVideo
-from forms import RegisterForm, LoginForm, PlaylistForm, RequestResetForm, ResetPasswordForm
+from forms import RegisterForm, LoginForm, UserUpdateForm, PlaylistForm, RequestResetForm, ResetPasswordForm
 from sqlalchemy.exc import IntegrityError
 from constants import BASE_URL_WORKOUT, SECRET_KEY
 import app_json
@@ -339,6 +339,7 @@ def delete_user(user_id):
     session.pop('user_id')
     return redirect('/')
 
+
 @app.route('/users/update/<int:user_id>', methods=['GET', 'POST'])
 def update_user(user_id):
     '''Update user information.'''
@@ -346,7 +347,7 @@ def update_user(user_id):
         flash("Please login first!", "msguser")
         return redirect('/auth')
     user = User.query.get_or_404(user_id)
-    form = RegisterForm(obj=user)
+    form = UserUpdateForm(obj=user)
     if form.validate_on_submit():
         user.username = form.username.data
         user.email = form.email.data
@@ -355,6 +356,7 @@ def update_user(user_id):
         db.session.commit()
         return redirect(f'/profile/{user.username}')
     return render_template('update_user.html', form=form, user=user)
+
 
 #authorization
 @app.route("/register", methods=['GET', 'POST'])

@@ -18,6 +18,15 @@ class LoginForm(FlaskForm):
     password = PasswordField("Password", validators=[InputRequired()])
 
 
+class UserUpdateForm(FlaskForm):
+    """User update form."""
+    username = StringField("Username", validators=[InputRequired()])
+    #password = PasswordField("Password", validators=[InputRequired()])
+    email = StringField("Email", validators=[InputRequired()])
+    first_name = StringField("First Name", validators=[InputRequired()])
+    last_name = StringField("Last Name", validators=[InputRequired()])
+
+
 class PlaylistForm(FlaskForm):
     """Form for adding a video to a playlist."""
     name = StringField("Playlist Name", validators=[InputRequired()])
