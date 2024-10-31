@@ -341,6 +341,10 @@ footer {
 /*  CSS loader credit: https://loading.io/css/ */
 /* additional credit: https://github.com/devtonic-net/flask-loading-app-message-and-spinner */
 
+.password-reset a {
+  color: snow;
+}
+
 /*responsive desing */
 @media screen and (max-width: 480px) {
   #auto-dismiss-alert {
@@ -455,4 +459,27 @@ footer {
     display: flex;
     flex-direction: column;
   }
+}
+
+.content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+legend {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: snow;
+}
+.reset-password-container {
+  background-color: #4c6085;
+  width: 70%;
+  padding: 30px;
+  border-radius: 8px;
+  margin: 50px auto;
+  display: flex;
+  justify-content: space-around;
+  justify-content: space-evenly;
 }

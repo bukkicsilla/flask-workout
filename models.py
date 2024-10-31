@@ -1,5 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from constants import SECRET_KEY
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -81,7 +83,20 @@ class User(db.Model):
 
     videos = db.relationship('Video', secondary='users_videos', backref='users')
     #ratings = db.relationship('UserVideo', backref='user')
-
+    
+    def get_reset_token(self, expires_sec=3600):
+        s = Serializer(SECRET_KEY, expires_sec)
+        return s.dumps({'user_id': self.id}).decode('utf-8')
+    
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(SECRET_KEY)
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
+    
     def serialize(self):
         """Returns a dict representation of user which we can turn into JSON"""
         return {

@@ -1,13 +1,16 @@
-from flask import Flask, render_template, jsonify, request, flash, redirect, session
+from flask import Flask, render_template, jsonify, request, flash, redirect, session, url_for
 from models import db, connect_db, Exercise, Video, User, UserVideo, Playlist, PlaylistVideo
-from forms import RegisterForm, LoginForm, PlaylistForm
+from forms import RegisterForm, LoginForm, PlaylistForm, RequestResetForm, ResetPasswordForm
 from sqlalchemy.exc import IntegrityError
-from constants import BASE_URL_WORKOUT
+from constants import BASE_URL_WORKOUT, SECRET_KEY
 import app_json
 import requests
 import flask_cors
 import re
-
+import os
+from flask_mail import Mail, Message
+from flask_bcrypt import Bcrypt
+bcrypt = Bcrypt()
 
 app = Flask(__name__)
 
@@ -22,7 +25,16 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres.jljzqisclorjmtmwc
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ECHO"] = False
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 10
-app.config["SECRET_KEY"] = "Capstone workout"
+app.config["SECRET_KEY"] = SECRET_KEY
+
+app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+#app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_USER')
+#app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASS')
+app.config['MAIL_USERNAME'] = 'csilla.bukki@gmail.com'
+app.config['MAIL_PASSWORD'] = 'ohgy ibdq hktx tlsj'
+mail = Mail(app)
 
 connect_db(app)
 MUSCLES = ['abdominals', 'abductors', 'adductors', 'biceps', 'calves', 'chest', 'forearms', 'glutes', 'hamstrings', 'lats', 'lower_back', 'middle_back', 'neck', 'quadriceps', 'traps', 'triceps']
@@ -392,7 +404,7 @@ def login_user():
             #form.username.errors = ['Invalid username or']
             #form.password.errors = ['Invalid password']
             flash('Invalid username or password', 'msgerror')
-            return redirect('/register')
+            return redirect('/login')
     return render_template('login.html', form=form)
 
 
@@ -403,4 +415,51 @@ def logout_user():
     session.pop('username')
     #flash("Goodbye!", "success")
     return redirect('/')
+
+#password reset
+def send_reset_email(user):
+    token = user.get_reset_token()
+    msg = Message('Password Reset Request',
+                  sender='noreply@demo.com',
+                  recipients=[user.email])
+    msg.body = f'''To reset your password, visit the following link:
+{url_for('reset_token', token=token, _external=True)}
+
+If you did not make this request then simply ignore this email and no changes will be made.
+'''
+    mail.send(msg)
+
+@app.route('/reset_password', methods=['GET', 'POST'])
+def reset_request():
+    '''Request a password reset.'''
+    if "user_id" in session:
+        return redirect(url_for('index'))
+    form = RequestResetForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        send_reset_email(user)
+        flash('An email has been sent with instructions to reset your password.', 'msguser')
+        return redirect(url_for('login_user'))
+    return render_template('reset_request.html', title='Reset Password', form=form)
+
+@app.route("/reset_password/<token>", methods=['GET', 'POST'])
+def reset_token(token):
+    '''Reset password.'''
+    if "user_id" in session:
+        return redirect(url_for('index'))
+    user = User.verify_reset_token(token)
+    if user is None:
+        flash('That is an invalid or expired token', 'warning')
+        return redirect(url_for('reset_request'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user.password = hashed_password
+        db.session.commit()
+        flash('Your password has been updated! You are now able to log in', 'msguser')
+        return redirect(url_for('login_user'))
+    return render_template('reset_token.html', title='Reset Password', form=form)
+
+#credit for password reset: https://www.youtube.com/watch?v=vutyTx7IaAI&t=36s
+#https://github.com/CoreyMSchafer/code_snippets/tree/master/Python/Flask_Blog/10-Password-Reset-Email
 

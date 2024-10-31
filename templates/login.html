@@ -13,7 +13,9 @@ content %}
       {% endfor %}
     </p>
     {% endfor %}
-
+    <div class="password-reset">
+      <a href="{{ url_for('reset_request') }}">Forgot Password?</a>
+    </div>
     <button class="btn btn-login" type="submit">Login</button>
   </form>
 </div>
