@@ -212,8 +212,7 @@ footer {
 }
 
 /* The save '+' and delete 'X' anchor tag */
-.delete-video,
-.add-video {
+.delete-video {
   display: none;
   position: absolute;
   top: 5px;
@@ -239,7 +238,19 @@ footer {
   border-radius: 50%;
   cursor: pointer;
 }
-
+.add-video {
+  display: none;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: green;
+  color: white;
+  padding: 2px 6px;
+  font-size: 14px;
+  text-decoration: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
 /* Show '+' or 'X' when the iframe is hovered */
 .video-wrapper:hover .delete-video,
 .video-wrapper:hover .add-video,
